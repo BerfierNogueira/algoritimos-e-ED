@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct lista{
+    int num;
+    struct lista * node;
+}Lista;
+
+void insere_no(Lista * lista){
+    Lista * node = (Lista *) malloc(sizeof(Lista));
+    if(!node)
+        exit(1);
+    printf("\nNice\n\n");
+    printf("\nAdicione um número para lista: ");
+    scanf("%d", &node->num);
+    printf("\nNúmero digitado = %d", node->num);
+
+    lista->node = node;
+
+    node->node = NULL;
+}
+
+int findInList(Lista * lista, int defined){
+    Lista * p = lista; int match = 0;
+    if(p == NULL)
+        return -1;
+    do{
+        match++;
+        if(p->num == defined)
+            return match;
+        p = p->node;
+    }while(p != NULL);
+    return -1;
+}
+
+int getDistance(Lista * lista, int defined){
+    int position = findInList(lista, defined);
+    printf("\tAté aqui de boa");
+    if(position == -1)
+        return position;
+    int size = mostrarIterativo(lista);
+    system("cls");
+    printf("\tAchado na posicao %d, size = %d", position, size);
+    printf("\nAltura = %d", (size - position));
+    return (size - position);
+}
+
+int mostrar(Lista * lista){
+    static int licount = 0;
+    if(lista != NULL){
+        printf("\nLista, elemento %d", lista->num);
+        licount++;
+        mostrar(lista->node);
+    }
+    return licount;
+}
+
+int mostrarIterativo(Lista * lista){
+    Lista * p; int licount = 0;
+    for(p = lista; p != NULL; p = p->node){
+        printf("\nLista, elemento %d", p->num);
+        licount++;
+    }
+    return licount;
+}
+
+int main(){
+    Lista lista;
+
+    printf("Inicia lista\n");
+    printf("Ponha o número de kickstart: ");
+    scanf("%d", &lista.num);
+    lista.node = NULL;
+    Lista * tp = &lista;
+    int opt = 1;
+    do{
+        printf("\nCadastrar mais um número? 0 - sair");
+        scanf("%d", &opt);
+        if(!opt)
+            break;
+        insere_no(tp);
+        tp = tp->node;
+    }while(1);
+    printf("\nForma recursiva: \n");
+    int size = mostrar(&lista);
+    printf("\nTotal de elementos: %d", size);
+    printf("\n\nForma iterativa: \n");
+    size = mostrarIterativo(&lista);
+    printf("\nTotal de elementos: %d", size);
+    printf("\n\n");
+
+    printf("Procurar item em lista: ");
+    int position; scanf("%d", &position);
+    printf("\nNúmero escolhido = %d", position);
+    int altura = getDistance(&lista, position);
+    printf("\nAltura = %d\n", altura);
+
+    getchar();
+    return 0;
+}
